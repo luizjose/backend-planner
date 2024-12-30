@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   app:
     build:
@@ -10,18 +12,9 @@ services:
       - "3001:3001"
     networks:
       - app_network
-
-  nginx:
-    image: nginx:latest
-    container_name: nginx_proxy
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-    ports:
-      - "80:80"
-    depends_on:
-      - app
-    networks:
-      - app_network
+      - .:/app
+    command: ["npm", "run", "dev"]
 
 networks:
   app_network:
