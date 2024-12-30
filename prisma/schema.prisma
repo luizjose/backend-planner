@@ -1,0 +1,106 @@
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id                  String                @id @default(uuid())
+  name                String
+  email               String                @unique
+  password            String?
+  googleId            String?
+  profilePic          String?
+  subscription        String?
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  financialCategories FinancialCategories[]
+  financialRecords    FinancialRecords[]
+  Habit               Habits[]
+  payments            Payments[]
+}
+
+model FinancialRecords {
+  id          String              @id @default(uuid())
+  description String
+  amount      Float
+  date        DateTime
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  type_id     String
+  user_id     String
+  name        String
+  category_id String
+  category    FinancialCategories @relation(fields: [category_id], references: [id])
+  type        FinanceType         @relation(fields: [type_id], references: [id])
+  user        Users               @relation(fields: [user_id], references: [id])
+}
+
+model FinanceType {
+  id               String             @id @default(uuid())
+  name             String
+  FinancialRecords FinancialRecords[]
+}
+
+model FinancialCategories {
+  id               String             @id @default(uuid())
+  user_id          String?
+  name             String
+  user             Users?             @relation(fields: [user_id], references: [id])
+  FinancialRecords FinancialRecords[]
+}
+
+model Habits {
+  id           String         @id @default(uuid())
+  user_id      String
+  name         String
+  description  String
+  created_at   DateTime       @default(now())
+  updated_at   DateTime       @updatedAt
+  habitDays    HabitDays[]
+  habitRecords HabitRecords[]
+  user         Users          @relation(fields: [user_id], references: [id])
+}
+
+model HabitDays {
+  id       String @id @default(uuid())
+  habit_id String
+  day      String
+  habit    Habits @relation(fields: [habit_id], references: [id])
+}
+
+model HabitRecords {
+  id         String   @id @default(uuid())
+  habit_id   String
+  date       DateTime
+  status     String
+  created_at DateTime @default(now())
+  habit      Habits   @relation(fields: [habit_id], references: [id])
+}
+
+model SubscriptionPlans {
+  id         String     @id @default(uuid())
+  name       String
+  price      Float
+  features   String
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+  plan       Payments[]
+}
+
+model Payments {
+  id               String            @id @default(uuid())
+  user_id          String
+  plan_id          String
+  amount           Float
+  status           String
+  transaction_date DateTime
+  created_at       DateTime          @default(now())
+  updated_at       DateTime          @updatedAt
+  plan             SubscriptionPlans @relation(fields: [plan_id], references: [id])
+  user             Users             @relation(fields: [user_id], references: [id])
+}
