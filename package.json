@@ -3,7 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "npx prisma migrate deploy && tsx watch src/server.ts"
+    "start": "npx prisma migrate deploy && npm run build && tsx watch src/server.ts",
+    "build": "tsc",
+    "start:docker": "npm run build && docker-compose up",
+    "dev": "npx prisma migrate deploy && tsx watch src/server.ts"
+
   },
   "keywords": [],
   "author": "",

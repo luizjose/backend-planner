@@ -1,24 +1,14 @@
-# Etapa 1: Build
-FROM node:18
+FROM node:18-alpine
 
-# Definir o diretório de trabalho dentro do contêiner
-WORKDIR /app
+WORKDIR /usr/src/app
 
-# Copiar os arquivos do código-fonte
-COPY . /app
+COPY package*.json ./
 
-# Remover node_modules e instalar dependências
-RUN rm -rf node_modules
 RUN npm install
 
-# Ajustar permissões
-RUN chown -R node:node /app
+COPY . .
 
-# Definir o usuário
-USER node
+EXPOSE 3000
 
-# Expor a porta
-EXPOSE 3001
-
-# Comando para rodar o app
-CMD ["npm", "run", "dev"]
+CMD [ "npm", "run", "build" ]
+CMD [ "npm", "run", "start" ]

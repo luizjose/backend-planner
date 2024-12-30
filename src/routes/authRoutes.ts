@@ -3,7 +3,10 @@ import { loginWithGoogle } from "../controllers/authController";
 
 const router = Router();
 
-router.get("/")
+router.get("/", (req, res) => {
+    res.send("Hello from auth routes");
+    }
+);
 
 router.post("/google", loginWithGoogle);
 router.post("/login");
