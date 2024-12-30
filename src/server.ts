@@ -5,7 +5,7 @@ import protectedRoutes from "./routes/protectedRoutes";
 
 const app = express();
 
-const port = 3001;
+const port = 3000;
 //app.use(cors());
 app.use(express.json());
 app.use("/", (req, res) => {
